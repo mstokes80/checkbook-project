@@ -5,6 +5,7 @@ import com.stokessoftwaresolutions.checkbookapi.security.repository.UserReposito
 import com.stokessoftwaresolutions.checkbookapi.security.utils.JwtUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -32,6 +34,9 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Value("${jwt.expirationMs}")
+    private int jwtExpirationMs;
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody SignInRequest signInRequest) {
 
@@ -49,6 +54,7 @@ public class AuthController {
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
+                new Date((new Date()).getTime() + jwtExpirationMs),
                 roles));
     }
 
