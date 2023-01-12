@@ -118,12 +118,12 @@ public class CheckbookController {
             } else {
                 checkbook.setCurrentBalance(checkbook.getCurrentBalance().subtract(transaction.getAmount()));
             }
+            checkbook = checkbookRepository.save(checkbook);
         }
         else {
             return  ResponseEntity.badRequest().build();
         }
 
-        checkbookRepository.save(checkbook);
         transaction.setCreateDate(new Date());
         transaction.setCheckbook(checkbook);
         Transaction savedTransaction = transactionRepository.save(transaction);

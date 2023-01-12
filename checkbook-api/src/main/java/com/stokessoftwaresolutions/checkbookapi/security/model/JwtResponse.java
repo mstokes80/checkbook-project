@@ -1,5 +1,6 @@
 package com.stokessoftwaresolutions.checkbookapi.security.model;
 
+import java.util.Date;
 import java.util.List;
 
 public class JwtResponse {
@@ -9,13 +10,14 @@ public class JwtResponse {
     private long id;
     private String username;
     private String email;
+    private Date expirationDate;
     private List<String> roles;
-
-    public JwtResponse(String token, long id, String username, String email, List<String> roles) {
+    public JwtResponse(String token, long id, String username, String email, Date expirationDate, List<String> roles) {
         this.token = token;
         this.id = id;
         this.username = username;
         this.email = email;
+        this.expirationDate = expirationDate;
         this.roles = roles;
     }
 
@@ -58,6 +60,14 @@ public class JwtResponse {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     public List<String> getRoles() {
