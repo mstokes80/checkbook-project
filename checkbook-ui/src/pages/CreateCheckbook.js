@@ -2,17 +2,14 @@ import {
     redirect,
     useActionData,
     useNavigate,
-    useNavigation,
   } from 'react-router-dom';
+
+import { addCheckbook } from '../lib/api';
 
 import CheckbookForm from "../components/checkbook/CheckbookForm";
 
 const CreateCheckbook = () => {
   const data = useActionData();
-
-  const navigation = useNavigation();
-  console.log(navigation.state);
-
   const navigate = useNavigate();
 
   function cancelHandler() {
@@ -28,12 +25,11 @@ const CreateCheckbook = () => {
 
 export default CreateCheckbook;
 
-export async function action({ request }) {
+export async function action({ request, params }) {
     const data = await request.formData();
-    console.log(data);
-    // const validationError = await savePost(data);
-    // if (validationError) {
-    //   return validationError;
-    // }
-    return redirect('/');
+    const validationError = await addCheckbook({ name: data.get("name"), currentBalance: data.get("currentBalance")});
+    if (validationError) {
+      return validationError;
+    }
+    return redirect(`/checkbook`);
 }

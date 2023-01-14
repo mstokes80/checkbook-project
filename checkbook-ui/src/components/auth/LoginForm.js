@@ -1,4 +1,5 @@
 import { useRef, useContext } from "react";
+import { Link, redirect } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
 
 const LoginForm = () => {
@@ -25,16 +26,15 @@ const LoginForm = () => {
                 throw Error("Unable to authenticate using the provided credentials.")
             }
         }).then((data) => {
-            console.log(data);
-            const expDate = new Date().getTime() + 360000;
-            authContext.login(data.token, new Date(expDate).toISOString());
+            authContext.login(data.token, data.expirationDate);
+            redirect("/checkbook")
         }).catch(err => {
             alert(err);
         }); 
     };
     return (
-        <div className="row mt-5">
-            <div className="col-md-10">
+        <div className="row mt-5 justify-content-center">
+            <div className="col-md-5">
                 <form onSubmit={submitFormHandler}>
                     <div className="mb-3">
                         <label htmlFor="username" className="form-label">User Name</label>
@@ -46,7 +46,7 @@ const LoginForm = () => {
                     </div>
                     <div className="text-center">
                         <button className="btn btn-primary">Login</button>
-                        <button className="btn btn-secondary ms-3">Create Account</button>
+                        <Link className="btn btn-secondary ms-3" to="/create-account">Create Account</Link>
                     </div>
                 </form>
             </div>

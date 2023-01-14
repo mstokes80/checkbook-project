@@ -5,6 +5,7 @@ import {
     useNavigation,
     useParams
   } from 'react-router-dom';
+import { addTransaction } from '../lib/api';  
 import TransactionForm from "../components/transactions/TransactionForm";
 
 const CreateTransactionPage = () => {
@@ -23,18 +24,23 @@ const CreateTransactionPage = () => {
     return (
     <>
         {data && data.isError && <p>{data.message}</p>}
-        <TransactionForm onCancel={cancelHandler}/>;
+        <TransactionForm onCancel={cancelHandler}/>
     </>);
 }
 
 export default CreateTransactionPage;
 
-export async function action({ request }) {
+export async function action({ request, params }) {
     const data = await request.formData();
-    console.log(data);
-    // const validationError = await savePost(data);
-    // if (validationError) {
-    //   return validationError;
-    // }
-    return redirect('/');
+    const validationError = await addTransaction(
+      { 
+        transactionType: data.get("transactionType"),
+        description: data.get("description"), 
+        amount: data.get("amount"), 
+        payedDate: data.get("payedDate") 
+      }, params.checkbookId);
+    if (validationError) {
+      return validationError;
+    }
+    return redirect(`/checkbook/${params.checkbookId}/transactions`);
 }

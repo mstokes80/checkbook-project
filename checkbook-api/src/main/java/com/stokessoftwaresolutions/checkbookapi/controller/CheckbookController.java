@@ -34,7 +34,10 @@ public class CheckbookController {
 
     @GetMapping("/checkbooks")
     public List<Checkbook> getCheckbooks() {
-        return checkbookRepository.findAll();
+        UserDetails userDetails =
+                (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElse(new User());
+        return checkbookRepository.findByUser(user);
     }
 
     @GetMapping("/checkbooks/{id}")
