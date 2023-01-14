@@ -2,7 +2,7 @@ import { Form } from "react-router-dom";
 
 const CheckbookForm = (props) => {
     return (
-        <div className="row mt-5">
+        <div className="row mt-5 pt-5">
             <div className="col-md-10">
                 <Form action="/checkbook/create-checkbook" method="post">
                     <div className="mb-3">
