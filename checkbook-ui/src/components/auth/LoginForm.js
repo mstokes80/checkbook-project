@@ -35,20 +35,26 @@ const LoginForm = () => {
     return (
         <div className="row mt-5 justify-content-center">
             <div className="col-md-5">
-                <form onSubmit={submitFormHandler}>
-                    <div className="mb-3">
-                        <label htmlFor="username" className="form-label">User Name</label>
-                        <input type="text" className="form-control" id="username" ref={usernameRef} />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="password" className="form-label">Password</label>
-                        <input type="password" className="form-control" id="password" ref={passwordRef} />
-                    </div>
-                    <div className="text-center">
-                        <button className="btn btn-primary">Login</button>
-                        <Link className="btn btn-secondary ms-3" to="/create-account">Create Account</Link>
-                    </div>
-                </form>
+                <div>
+                    <form onSubmit={submitFormHandler}>
+                        <h1>Login</h1>
+                        <hr />
+                        <div className="mb-3">
+                            <label htmlFor="username" className="form-label">User Name</label>
+                            <input type="text" className="form-control" id="username" ref={usernameRef} />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="password" className="form-label">Password</label>
+                            <input type="password" className="form-control" id="password" ref={passwordRef} />
+                        </div>
+                        <div className="text-center">
+                            <button className="btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                </div>
+                <div className="text-center mt-4">
+                    <p>Don't have an account? <Link className="link-primary" to="/create-account">Register here</Link></p>
+                </div>
             </div>
         </div>
     );

@@ -28,8 +28,10 @@ const TransactionForm = (props) => {
                         <label htmlFor="amount" className="form-label">Amount:</label>
                         <input type="number" step="0.01" className="form-control" id="amount" name="amount" />
                     </div>
-                    <div className="mb-3">
-                        <input type="date" className="form-control" id="payedDate" name="payedDate" />
+                    <div className="row mb-3">
+                        <div className="col-md-4">
+                            <input type="date" className="form-control" id="payedDate" name="payedDate" />
+                        </div>
                     </div>
                     <div className="text-center">
                         <button className="btn btn-primary">Create</button>

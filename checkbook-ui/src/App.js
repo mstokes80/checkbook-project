@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CheckbookLayout from './components/layout/CheckbookLayout';
 
-import './App.css';
 import CheckbookPage from './pages/CheckbookPage';
 import CheckbookForm from './components/checkbook/CheckbookForm';
 import Transactions from './pages/Transactions';
@@ -20,6 +19,9 @@ import { action as createTransactionAction } from './pages/CreateTransactionPage
 import { action as createAccountAction } from './pages/auth/CreateAccountPage';
 import { loader as checkbookLoader } from './components/checkbook/CheckbookListing';
 import { loader as transactionLoader } from './components/transactions/TransactionList';
+
+import './App.css';
+import './scss/custom.scss'
 
 function App() {
   const authContext = useContext(AuthContext);
