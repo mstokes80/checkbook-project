@@ -77,8 +77,22 @@ public class AuthController {
                 signupRequest.getEmail(),
                 encoder.encode(signupRequest.getPassword()));
 
-        userRepository.save(user);
+        user = userRepository.save(user);
 
-        return ResponseEntity.ok(new String("User registered successfully!"));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(signupRequest.getUsername(), signupRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
+
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                new Date((new Date()).getTime() + jwtExpirationMs),
+                roles));
     }
 }
