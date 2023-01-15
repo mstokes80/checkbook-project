@@ -6,7 +6,6 @@ const TransactionListItem = (props) => {
     const params = useParams();
     const navigate = useNavigate();
     const isWithdrawal = props.type === 'W';
-    //const itemClass =  isWithdrawal ? 'list-group-item-danger' : 'list-group-item-success';
     const handleDelete = () => {
         if(window.confirm("Are you sure you want to delete this transaction?")) {
             deleteTransaction(props.id).then(() => {
