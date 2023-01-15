@@ -11,7 +11,7 @@ const TransactionForm = (props) => {
                         <legend className="col-form-label col-sm-3 pt-0">Transaction Type:</legend>
                         <div className="col-sm-9">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" id="transactionTypeW" name="transactionType" value="W" checked />
+                                <input className="form-check-input" type="radio" id="transactionTypeW" name="transactionType" value="W" defaultChecked />
                                 <label className="form-check-label" htmlFor="transactionType">Withdrawal</label>
                             </div>
                             <div className="form-check form-check-inline">
