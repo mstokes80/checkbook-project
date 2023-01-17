@@ -1,7 +1,14 @@
-import { Link, Outlet } from "react-router-dom";
+import { useContext } from "react";
+import { Link, Outlet, Navigate } from "react-router-dom";
 import CheckbookListing from "../components/checkbook/CheckbookListing";
 
+import AuthContext from "../store/auth-context";
+
 const CheckbookPage = () => {
+    const auth = useContext(AuthContext);
+    if(!auth.isLoggedIn){
+        <Navigate to="/login" />
+    }
     return (
         <div className="row gx-5" >
             <div className="col-md-12">
