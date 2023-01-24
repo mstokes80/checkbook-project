@@ -1,13 +1,15 @@
 package com.stokessoftwaresolutions.checkbookapi.controller;
 
+import com.stokessoftwaresolutions.checkbookapi.dto.CheckbookDto;
+import com.stokessoftwaresolutions.checkbookapi.dto.TransactionDto;
 import com.stokessoftwaresolutions.checkbookapi.model.Checkbook;
-import com.stokessoftwaresolutions.checkbookapi.model.CheckbookRequest;
 import com.stokessoftwaresolutions.checkbookapi.model.Transaction;
 import com.stokessoftwaresolutions.checkbookapi.repository.CheckbookRepository;
 import com.stokessoftwaresolutions.checkbookapi.repository.TransactionRepository;
 import com.stokessoftwaresolutions.checkbookapi.security.model.User;
 import com.stokessoftwaresolutions.checkbookapi.security.repository.UserRepository;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -32,16 +35,21 @@ public class CheckbookController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("/checkbooks")
-    public List<Checkbook> getCheckbooks() {
+    public List<CheckbookDto> getCheckbooks() {
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername()).orElse(new User());
-        return checkbookRepository.findByUser(user);
+        List<CheckbookDto> checkbookDtos = checkbookRepository.findByUser(user).stream()
+                .map(checkbook -> modelMapper.map(checkbook, CheckbookDto.class)).collect(Collectors.toList());
+        return checkbookDtos;
     }
 
     @GetMapping("/checkbooks/{id}")
-    public ResponseEntity<Checkbook> getCheckbook(@PathVariable Long id) {
+    public ResponseEntity<CheckbookDto> getCheckbook(@PathVariable Long id) {
         Checkbook checkbook = checkbookRepository.findById(id).orElse(null);
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -49,17 +57,15 @@ public class CheckbookController {
         if(checkbook == null || !checkbook.getUser().equals(user)) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(checkbook);
+        return ResponseEntity.ok().body(modelMapper.map(checkbook, CheckbookDto.class));
     }
 
     @PostMapping("/checkbooks")
-    public ResponseEntity<Checkbook> saveCheckbook(@Valid @RequestBody CheckbookRequest checkbookRequest) {
+    public ResponseEntity<CheckbookDto> saveCheckbook(@Valid @RequestBody CheckbookDto checkbookDto) {
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername()).orElse(new User());
-        Checkbook checkbook = new Checkbook();
-        checkbook.setCurrentBalance(checkbookRequest.getCurrentBalance());
-        checkbook.setName(checkbookRequest.getName());
+        Checkbook checkbook = modelMapper.map(checkbookDto, Checkbook.class);
         checkbook.setUser(user);
         checkbook.setCreateDate(new Date());
         Checkbook savedCheckbook = checkbookRepository.save(checkbook);
@@ -67,7 +73,7 @@ public class CheckbookController {
                 .path("/{id}")
                 .buildAndExpand(savedCheckbook.getId())
                 .toUri();
-        return ResponseEntity.created(location).body(savedCheckbook);
+        return ResponseEntity.created(location).body(modelMapper.map(savedCheckbook, CheckbookDto.class));
     }
 
     @DeleteMapping("/checkbooks/{id}")
@@ -82,7 +88,7 @@ public class CheckbookController {
     }
 
     @GetMapping("/checkbooks/{id}/transactions")
-    public ResponseEntity<List<Transaction>> getAllTransactions(@PathVariable long id) {
+    public ResponseEntity<List<TransactionDto>> getAllTransactions(@PathVariable long id) {
         Checkbook checkbook = checkbookRepository.findById(id).orElse(null);
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -90,12 +96,13 @@ public class CheckbookController {
         if(!checkbook.getUser().equals(user)) {
             return ResponseEntity.notFound().build();
         }
-        List<Transaction> transactions = transactionRepository.findByCheckbook(checkbook);
+        List<TransactionDto> transactions = transactionRepository.findByCheckbook(checkbook).stream()
+                .map(transaction -> modelMapper.map(transaction, TransactionDto.class)).collect(Collectors.toList());
         return ResponseEntity.ok().body(transactions);
     }
 
     @GetMapping("/checkbooks/transactions/{id}")
-    public ResponseEntity<Transaction> getTransaction(@PathVariable long id) {
+    public ResponseEntity<TransactionDto> getTransaction(@PathVariable long id) {
         Transaction transaction = transactionRepository.findById(id).orElse(null);
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -103,11 +110,12 @@ public class CheckbookController {
         if (transaction == null || !transaction.getCheckbook().getUser().equals(user)) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(transaction);
+        TransactionDto transactionDto = modelMapper.map(transaction, TransactionDto.class);
+        return ResponseEntity.ok().body(transactionDto);
     }
 
     @PostMapping("/checkbooks/{id}/transactions")
-    public ResponseEntity<Transaction> saveTransaction(@PathVariable long id, @Valid @RequestBody Transaction transaction) {
+    public ResponseEntity<TransactionDto> saveTransaction(@PathVariable long id, @Valid @RequestBody TransactionDto transactionDto) {
         Checkbook checkbook = checkbookRepository.findById(id).orElse(null);
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -115,12 +123,12 @@ public class CheckbookController {
         if(checkbook == null || !checkbook.getUser().equals(user)) {
             return ResponseEntity.notFound().build();
         }
-        if(transaction.getTransactionType().equals(Transaction.TRANSACTION_TYPE_WITHDRAWAL)
-                || transaction.getTransactionType().equals(Transaction.TRANSACTION_TYPE_DEPOSIT)) {
-            if(transaction.getTransactionType().equals(Transaction.TRANSACTION_TYPE_DEPOSIT)){
-                checkbook.setCurrentBalance(checkbook.getCurrentBalance().add(transaction.getAmount()));
+        if(transactionDto.getTransactionType().equals(Transaction.TRANSACTION_TYPE_WITHDRAWAL)
+                || transactionDto.getTransactionType().equals(Transaction.TRANSACTION_TYPE_DEPOSIT)) {
+            if(transactionDto.getTransactionType().equals(Transaction.TRANSACTION_TYPE_DEPOSIT)){
+                checkbook.setCurrentBalance(checkbook.getCurrentBalance().add(transactionDto.getAmount()));
             } else {
-                checkbook.setCurrentBalance(checkbook.getCurrentBalance().subtract(transaction.getAmount()));
+                checkbook.setCurrentBalance(checkbook.getCurrentBalance().subtract(transactionDto.getAmount()));
             }
             checkbook = checkbookRepository.save(checkbook);
         }
@@ -128,6 +136,7 @@ public class CheckbookController {
             return  ResponseEntity.badRequest().build();
         }
 
+        Transaction transaction = modelMapper.map(transactionDto, Transaction.class);
         transaction.setCreateDate(new Date());
         transaction.setCheckbook(checkbook);
         Transaction savedTransaction = transactionRepository.save(transaction);
@@ -136,7 +145,7 @@ public class CheckbookController {
                 .path("/{id}")
                 .buildAndExpand(savedTransaction.getId())
                 .toUri();
-        return ResponseEntity.created(location).body(transaction);
+        return ResponseEntity.created(location).body(modelMapper.map(savedTransaction, TransactionDto.class));
     }
 
     @DeleteMapping("/checkbooks/transactions/{id}")
