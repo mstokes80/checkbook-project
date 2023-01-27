@@ -8,7 +8,8 @@ const TransactionList = () => {
     const [monthValue, setMonthValue] = useState("");
     const [yearValue, setYearValue] = useState("");
 
-    const [filteredTransactions, setFilteredTransactions] = useState([...transactions]);
+    const [filteredTransactions, setFilteredTransactions] = useState([]);
+    const [filtersApplied, setFiltersApplied] = useState(false);
 
     let filterYears = [];
     const currentYear = new Date().getFullYear();
@@ -31,6 +32,7 @@ const TransactionList = () => {
 
     useEffect(() => {
         if(monthValue !== '' && yearValue !== '') {
+            setFiltersApplied(true);
             setFilteredTransactions(transactions.filter((transaction) => {
                 const transactionYear = new Date(transaction.payedDate).getFullYear();
                 const transactionMonth = new Date(transaction.payedDate).getMonth();
@@ -44,7 +46,8 @@ const TransactionList = () => {
     const clearFilterHandler = () => {
         setMonthValue("");
         setYearValue("");
-        setFilteredTransactions(transactions);
+        setFiltersApplied(false);
+        setFilteredTransactions([]);
     };
     
     return (
@@ -71,6 +74,7 @@ const TransactionList = () => {
                     </div>
                 </div>
                 {filteredTransactions && filteredTransactions.length > 0 && filteredTransactions.map(transaction => <TransactionListItem key={transaction.id} id={transaction.id} description={transaction.description} amount={transaction.amount} type={transaction.transactionType} payedDate={transaction.payedDate} />)}
+                {!filteredTransactions.length > 0 && transactions.length > 0 && !filtersApplied && transactions.map(transaction => <TransactionListItem key={transaction.id} id={transaction.id} description={transaction.description} amount={transaction.amount} type={transaction.transactionType} payedDate={transaction.payedDate} />)}
                 {!transactions && <p>No transactions for this checkbook.</p>}
             </div>
         </div>
