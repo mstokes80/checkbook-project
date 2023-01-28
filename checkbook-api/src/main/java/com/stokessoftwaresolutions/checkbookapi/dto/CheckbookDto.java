@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -19,6 +19,6 @@ public class CheckbookDto {
     @Size(min=2, message = "Name should have at least 2 characters")
     private String name;
     private BigDecimal currentBalance;
-    private Date createDate;
+    private LocalDateTime createDate;
 
 }

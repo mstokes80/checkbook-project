@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    List<Transaction> findByCheckbook(Checkbook checkbook);
+    List<Transaction> findByCheckbookId(long id);
 }

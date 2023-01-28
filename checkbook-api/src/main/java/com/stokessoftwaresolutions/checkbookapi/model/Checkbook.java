@@ -9,9 +9,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -22,7 +23,7 @@ import java.util.List;
 public class Checkbook {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Size(min=2, message = "Name should have at least 2 characters")
     private String name;
@@ -34,5 +35,6 @@ public class Checkbook {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @NotNull
     private User user;
-    private Date createDate;
+    @CreationTimestamp
+    private LocalDateTime createDate;
 }
