@@ -8,9 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -23,7 +25,7 @@ public class Transaction {
     public static String TRANSACTION_TYPE_WITHDRAWAL = "W";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotBlank(message = "Description is required.")
     private String description;
@@ -34,6 +36,7 @@ public class Transaction {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Checkbook checkbook;
-    private Date payedDate;
-    private Date createDate;
+    private LocalDate payedDate;
+    @CreationTimestamp
+    private LocalDateTime createDate;
 }
