@@ -38,7 +38,9 @@ export async function action({ request, params }) {
         description: data.get("description"), 
         amount: data.get("amount"), 
         payedDate: data.get("payedDate") 
-      }, params.checkbookId);
+      }, params.checkbookId).catch((error) => {
+        alert(error.message);
+      });
     if (validationError) {
       return validationError;
     }

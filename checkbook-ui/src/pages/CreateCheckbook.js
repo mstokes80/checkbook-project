@@ -13,7 +13,7 @@ const CreateCheckbook = () => {
   const navigate = useNavigate();
 
   function cancelHandler() {
-    navigate('/');
+    navigate('/checkbook');
   }
   
   return (
@@ -27,7 +27,9 @@ export default CreateCheckbook;
 
 export async function action({ request, params }) {
     const data = await request.formData();
-    const validationError = await addCheckbook({ name: data.get("name"), currentBalance: data.get("currentBalance")});
+    const validationError = await addCheckbook({ name: data.get("name"), currentBalance: data.get("currentBalance")}).catch((error) => {
+      alert(error.message);
+    });
     if (validationError) {
       return validationError;
     }
