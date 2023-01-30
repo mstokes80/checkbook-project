@@ -32,7 +32,7 @@ export default CreateTransactionPage;
 
 export async function action({ request, params }) {
     const data = await request.formData();
-    const validationError = await addTransaction(
+    await addTransaction(
       { 
         transactionType: data.get("transactionType"),
         description: data.get("description"), 
@@ -41,8 +41,5 @@ export async function action({ request, params }) {
       }, params.checkbookId).catch((error) => {
         alert(error.message);
       });
-    if (validationError) {
-      return validationError;
-    }
     return redirect(`/checkbook/${params.checkbookId}/transactions`);
 }
