@@ -27,11 +27,8 @@ export default CreateCheckbook;
 
 export async function action({ request, params }) {
     const data = await request.formData();
-    const validationError = await addCheckbook({ name: data.get("name"), currentBalance: data.get("currentBalance")}).catch((error) => {
+    await addCheckbook({ name: data.get("name"), currentBalance: data.get("currentBalance")}).catch((error) => {
       alert(error.message);
     });
-    if (validationError) {
-      return validationError;
-    }
     return redirect(`/checkbook`);
 }
