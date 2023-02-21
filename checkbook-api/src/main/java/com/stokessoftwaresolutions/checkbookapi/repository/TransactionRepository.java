@@ -1,7 +1,6 @@
 package com.stokessoftwaresolutions.checkbookapi.repository;
 
 
-import com.stokessoftwaresolutions.checkbookapi.model.Checkbook;
 import com.stokessoftwaresolutions.checkbookapi.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 

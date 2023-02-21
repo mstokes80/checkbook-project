@@ -27,7 +27,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         StringBuilder sb = new StringBuilder();
         ex.getBindingResult().getAllErrors().forEach(error -> sb.append(error.getDefaultMessage() + "\n"));
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), sb.toString(), request.getDescription(false), "VALIDATION_ERROR");
-        return new ResponseEntity(errorDetails, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
 }
