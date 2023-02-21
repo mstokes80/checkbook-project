@@ -50,7 +50,7 @@ public class AuthController {
         List<String> roles = new ArrayList<>();
         roles.add("USER");
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
+        return ResponseEntity.ok(new JwtResponse(jwt, null,
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
@@ -88,7 +88,7 @@ public class AuthController {
         List<String> roles = new ArrayList<>();
         roles.add("USER");
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
+        return ResponseEntity.ok(new JwtResponse(jwt, null,
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
