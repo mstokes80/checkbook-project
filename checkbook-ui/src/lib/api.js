@@ -1,4 +1,4 @@
-const CHECKBOOK_API = 'https://localhost:8080';
+const CHECKBOOK_API = 'https://checkbook.local-stokesnet.net:8080';
 
   export async function getAllCheckbooks() {
     const response = await fetch(`${CHECKBOOK_API}/checkbooks`, 
