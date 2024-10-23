@@ -12,7 +12,7 @@ const LoginForm = () => {
         event.preventDefault();
         const enteredUsername = usernameRef.current.value;
         const enteredPassword = passwordRef.current.value;
-        fetch('https://checkbook.local-stokesnet.net:8080/api/auth/signin', 
+        fetch('https://checkbook.local-stokesnet.net/api/auth/signin', 
         {
             method: 'POST',
             body: JSON.stringify({ username: enteredUsername, password: enteredPassword}),
