@@ -3,7 +3,7 @@ services:
   checkbook-api:
     build: ./checkbook-api
     ports: 
-      - "443:8080"
+      - "443:443"
     depends_on: 
       - mysql  
   mysql:
