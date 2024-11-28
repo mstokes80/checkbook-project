@@ -3,7 +3,7 @@ services:
   checkbook-api:
     build: ./checkbook-api
     ports: 
-      - "8443:8443"
+      - "8443:8443"  
     depends_on: 
       - mysql  
   mysql:
@@ -18,6 +18,10 @@ services:
     build: ./checkbook-ui
     ports: 
       - "443:3000"
+    volumes:
+      - type: bind
+        source: /ssl
+        target: /ssl
     depends_on:
       - checkbook-api
 volumes:
