@@ -1,4 +1,4 @@
-const CHECKBOOK_API = 'https://checkbook.local-stokesnet.net:8443';
+const CHECKBOOK_API = 'https://checkbook.local-stokesnet.net';
 
   export async function getAllCheckbooks() {
     const response = await fetch(`${CHECKBOOK_API}/checkbooks`, 
