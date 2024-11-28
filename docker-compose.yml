@@ -20,7 +20,7 @@ services:
       - "443:3000"
     volumes:
       - type: bind
-        source: /ssl
+        source: /home/mattstokes/ssl
         target: /ssl
     depends_on:
       - checkbook-api
